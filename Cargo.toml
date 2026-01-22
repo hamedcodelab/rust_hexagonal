@@ -3,4 +3,14 @@ name = "rust_hexagonal"
 version = "0.1.0"
 edition = "2024"
 
+
+[[bin]]
+name = "api"
+path = "src/cmd/api/main.rs"
+
+#[[bin]]
+#name = "cli"
+#path = "src/cmd/cli/main.rs"
+
+
 [dependencies]
