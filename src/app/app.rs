@@ -10,8 +10,7 @@ impl App {
             config: conf,
         }
     }
-
-    pub fn run(&self) {
-        println!("Running {}", self.config.name);
+    pub fn init_dep(&mut self) {
+           self.init_config();
     }
 }
