@@ -6,3 +6,12 @@ grpc:
   port: "8081"
 #  grace_fully_shutdown_timeout: 10s
 
+
+
+postgres:
+  debug: true
+  dialect: postgres
+  connection_string: postgresql://postgres:secret@localhost:5432/rust_hexagonal?sslmode=disable&client_encoding=UTF8
+  max_idle_connections: 5
+  max_open_connections: 10
+  max_lifetime_seconds: 10
