@@ -26,4 +26,22 @@ impl App {
         }
         Ok(())
     }
+
+    pub async fn init_redis(&mut self) -> redis::RedisResult<()> {
+        let url = format!(
+            "redis://{}:{}@{}:{}/{}",
+            if self.config.cache.password.is_empty() { "" } else { &self.config.cache.password },
+            "",
+            self.config.cache.host,
+            self.config.cache.port,
+            self.config.cache.db
+        );
+
+        let client = redis::Client::open(url)?;
+        let conn = client.get_multiplexed_async_connection().await?;
+        println!("[REDIS] connected");
+
+        self.cache = Some(conn);
+        Ok(())
+    }
 }

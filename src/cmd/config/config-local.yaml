@@ -4,7 +4,7 @@ name: "rust_hexagonal"
 grpc:
   address: "0.0.0.0"
   port: "8081"
-#  grace_fully_shutdown_timeout: 10s
+  grace_fully_shutdown_timeout: 10s
 
 
 
@@ -15,3 +15,12 @@ postgres:
   max_idle_connections: 5
   max_open_connections: 10
   max_lifetime_seconds: 10
+
+
+cache:
+  host: "localhost"
+  port: "6379"
+  password: ""
+  timeout: 5s
+  db: 0
+  tls: false
