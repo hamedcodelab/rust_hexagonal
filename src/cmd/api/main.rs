@@ -20,6 +20,7 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let config = loader::load()?;
     let mut app = App::new(config);
     app.init_dep().await;
+    app.init_domain().await;
     app.start();
     Ok(())
 }

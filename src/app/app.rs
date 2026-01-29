@@ -21,4 +21,7 @@ impl App {
            self.init_postgres().await.expect("Error initializing postgres connection");
         self.init_redis().await.expect("Error initializing redis connection");
     }
+    pub async fn init_domain(&mut self) {
+        
+    }
 }
