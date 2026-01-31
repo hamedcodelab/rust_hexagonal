@@ -1,11 +1,13 @@
 use crate::app::config::Config;
 use redis::{aio::MultiplexedConnection};
-
+use crate::user::module::UserModule;
 
 pub struct App {
    pub config : Config,
    pub pool : Option<sqlx::PgPool>,
    pub cache: Option<MultiplexedConnection>,
+    // module
+    pub user: Option<UserModule>,
 }
 
 impl App {
@@ -13,7 +15,8 @@ impl App {
         App {
             config: conf,
             pool: None,
-            cache: None
+            cache: None,
+            user: None,
         }
     }
     pub async fn init_dep(&mut self) {
@@ -22,6 +25,6 @@ impl App {
         self.init_redis().await.expect("Error initializing redis connection");
     }
     pub async fn init_domain(&mut self) {
-        
+        self.init_user_domain().await;
     }
 }

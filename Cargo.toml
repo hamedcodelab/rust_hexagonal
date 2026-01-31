@@ -17,6 +17,9 @@ path = "src/cmd/api/main.rs"
 humantime-serde = "1.1"
 config = "0.14"
 serde = { version = "1.0", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde", "clock"] }
 tokio = { version = "1.49.0", features = ["full"] }
 sqlx = { version = "0.8", features = ["postgres", "runtime-tokio","migrate"] }
 redis = { version = "1.0.2", features = ["tokio-comp", "aio"] }
+thiserror = "2.0.18"
+async-trait = "0.1.89"
