@@ -3,6 +3,7 @@ use rust_hexagonal_service ::rust_hexagonal_service_server::{RustHexagonalServic
 use rust_hexagonal_service::{CreateUserRequest, CreateUserResponse,GetUserRequest,GetUserResponse};
 use tonic::{ Request,Response, Status};
 use crate::user::port::UserUsecase;
+use crate::user::domain::user::User;
 
 
 
@@ -24,30 +25,55 @@ impl RustHexagonalGrpcServer {
 impl RustHexagonalService for RustHexagonalGrpcServer {
     async fn create_user(&self, request: Request<CreateUserRequest>) -> Result<Response<CreateUserResponse>, Status> {
         let req:CreateUserRequest= request.into_inner();
-        println!("Received CreateUserRequest:{:?}", req);
+        // handle usecase to create user
+        let new_u_result =self.user_uc.create(&User::new(
+            req.email
+        )).await;
+
+        let new_u = match new_u_result {
+            Ok(Some(user)) => user,
+            Ok(None) => {
+                return Err(Status::internal("User was not created"));
+            }
+            Err(e) => {
+                return Err(Status::internal(format!("Failed to create user: {:?}", e)));
+            }
+        };
+
+
         let res:CreateUserResponse = CreateUserResponse{
             user: Some(rust_hexagonal_service::User{
-                id:11,
-                created_at:"created_at".to_string(),
-                email:"email".to_string(),
-                password:"password".to_string(),
-                updated_at:"updated_at".to_string(),
+                id:new_u.base.id,
+                created_at:new_u.base.created_at.map(|dt| dt.to_rfc3339()).unwrap_or_default(),
+                email:new_u.email,
+                password:new_u.password,
+                updated_at:new_u.base.updated_at.map(|dt| dt.to_rfc3339()).unwrap_or_default(),
             })
         };
         Ok(Response::new(res))
     }
 
     async fn get_user(&self, request: Request<GetUserRequest>) -> Result<Response<GetUserResponse>, Status> {
-        self.user_uc.get_by_id(11).await;
         let req:GetUserRequest = request.into_inner();
-        println!("Received GetUserRequest:{:?}", req);
+        let new_u_result = self.user_uc.get_by_id(req.id).await;
+
+        let new_u = match new_u_result {
+            Ok(Some(user)) => user,
+            Ok(None) => {
+                return Err(Status::internal("User was not found"));
+            }
+            Err(e) => {
+                return Err(Status::internal(format!("Failed to find user: {:?}", e)));
+            }
+        };
+
         let res:GetUserResponse = GetUserResponse{
             user: Some(rust_hexagonal_service::User{
-                id:11,
-                created_at:"created_at".to_string(),
-                email:"email".to_string(),
-                password:"password".to_string(),
-                updated_at:"updated_at".to_string(),
+                id:new_u.base.id,
+                created_at:new_u.base.created_at.map(|dt| dt.to_rfc3339()).unwrap_or_default(),
+                email:new_u.email,
+                password:new_u.password,
+                updated_at:new_u.base.updated_at.map(|dt| dt.to_rfc3339()).unwrap_or_default(),
             })
         };
         Ok(Response::new(res))

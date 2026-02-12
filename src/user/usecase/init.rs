@@ -24,13 +24,13 @@ impl UserUsecase for UserU {
         Ok(rows)
     }
 
-    async fn create(&self, deposit: &User) -> Result<(), RepoError> {
-        Ok(())
+    async fn create(&self, user: &User) -> Result<Option<User>, RepoError> {
+        let res =  self.user_repo.create(user).await?;
+        Ok(res)
     }
 
     async fn get_by_id(&self, id: u64) -> Result<Option<User>, RepoError> {
-        println!("sheet kar kard :: Getting user by id:{}", id);
-        let row =  self.user_repo.get_by_id(1).await?;
+        let row =  self.user_repo.get_by_id(id).await?;
         Ok(row)
     }
 

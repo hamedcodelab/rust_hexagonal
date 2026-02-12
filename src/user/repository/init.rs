@@ -30,7 +30,7 @@ impl UserRepository for UserR {
         Ok(vec![])
     }
 
-    async fn create(&self, deposit: &User) -> Result<(), RepoError> {
+    async fn create(&self, u: &User) -> Result<Option<User>, RepoError> {
         // sqlx::query!(
         //     "INSERT INTO deposits (id, amount) VALUES ($1, $2)",
         //     deposit.id,
@@ -39,7 +39,10 @@ impl UserRepository for UserR {
         //     .execute(&self.pool)
         //     .await?;
         //
-        Ok(())
+        println!("Repository create Call , Done!");
+        let user = User::new(u.email.clone());
+
+        Ok(Some(user))
     }
 
     async fn get_by_id(&self, id: u64) -> Result<Option<User>, RepoError> {
