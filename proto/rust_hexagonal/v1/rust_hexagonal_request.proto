@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package proto.rust_hexagonal.v1;
+
+message GetUserRequest {
+  uint64 id = 1;
+}
+
+
+message CreateUserRequest {
+  string email = 1;
+}

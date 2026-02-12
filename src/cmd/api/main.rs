@@ -21,6 +21,6 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut app = App::new(config);
     app.init_dep().await;
     app.init_domain().await;
-    app.start();
+    app.start().await?;
     Ok(())
 }

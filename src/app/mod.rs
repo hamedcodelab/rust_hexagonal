@@ -2,5 +2,5 @@
 pub mod app;
 pub mod config;
 mod dep;
-mod api;
+mod grpc;
 mod module;

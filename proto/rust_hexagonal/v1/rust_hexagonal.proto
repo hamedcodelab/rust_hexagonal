@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto.rust_hexagonal.v1;
+
+// Internal request/response protos
+import "rust_hexagonal/v1/rust_hexagonal_request.proto";
+import "rust_hexagonal/v1/rust_hexagonal_response.proto";
+
+// ----------------------------
+//       RustHexagonal API
+// ----------------------------
+
+service RustHexagonalService {
+  // User
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+}

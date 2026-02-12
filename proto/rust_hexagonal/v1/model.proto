@@ -1,0 +1,11 @@
+syntax = "proto3";
+package proto.rust_hexagonal.v1;
+
+
+message User {
+  uint64 id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  string email = 15;
+  string password = 16;
+}

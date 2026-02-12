@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto.rust_hexagonal.v1;
+
+
+import "rust_hexagonal/v1/model.proto";
+
+message GetUserResponse {
+  User user = 1;
+}
+
+
+message CreateUserResponse {
+  User user = 1;
+}
