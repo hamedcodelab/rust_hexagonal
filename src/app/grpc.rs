@@ -19,9 +19,11 @@ impl App {
             .register_encoded_file_descriptor_set(DESCRIPTOR)
             .build()?;
 
+        let grpc_server = rust_hexagonal_service_server(self.user.as_ref().unwrap().uc.clone());
+
         Server::builder()
         // .add_service(rust_hexagonal_service_server()).add_service(reflection_service)
-        .add_service(rust_hexagonal_service_server()).add_service(reflection_service)
+        .add_service(grpc_server).add_service(reflection_service)
         .serve(addr).await?;
         Ok(())
     }

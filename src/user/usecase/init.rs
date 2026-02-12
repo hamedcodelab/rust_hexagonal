@@ -29,6 +29,7 @@ impl UserUsecase for UserU {
     }
 
     async fn get_by_id(&self, id: u64) -> Result<Option<User>, RepoError> {
+        println!("sheet kar kard :: Getting user by id:{}", id);
         let row =  self.user_repo.get_by_id(1).await?;
         Ok(row)
     }

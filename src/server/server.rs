@@ -1,6 +1,8 @@
-use rust_hexagonal_service ::rust_hexagonal_service_server::{RustHexagonalService,RustHexagonalServiceServer};
+use std::sync::Arc;
+use rust_hexagonal_service ::rust_hexagonal_service_server::{RustHexagonalService, RustHexagonalServiceServer};
 use rust_hexagonal_service::{CreateUserRequest, CreateUserResponse,GetUserRequest,GetUserResponse};
 use tonic::{ Request,Response, Status};
+use crate::user::port::UserUsecase;
 
 
 
@@ -8,12 +10,18 @@ mod rust_hexagonal_service {
     tonic::include_proto!("proto.rust_hexagonal.v1");
 }
 
+pub struct RustHexagonalGrpcServer {
+    user_uc: Arc<dyn UserUsecase>,
+}
 
-#[derive(Debug,Default)]
-pub struct RustHexagonalV1Service {}
+impl RustHexagonalGrpcServer {
+    pub fn new(user_uc: Arc<dyn UserUsecase>) -> Self {
+        Self { user_uc }
+    }
+}
 
 #[tonic::async_trait]
-impl RustHexagonalService for RustHexagonalV1Service {
+impl RustHexagonalService for RustHexagonalGrpcServer {
     async fn create_user(&self, request: Request<CreateUserRequest>) -> Result<Response<CreateUserResponse>, Status> {
         let req:CreateUserRequest= request.into_inner();
         println!("Received CreateUserRequest:{:?}", req);
@@ -30,6 +38,7 @@ impl RustHexagonalService for RustHexagonalV1Service {
     }
 
     async fn get_user(&self, request: Request<GetUserRequest>) -> Result<Response<GetUserResponse>, Status> {
+        self.user_uc.get_by_id(11).await;
         let req:GetUserRequest = request.into_inner();
         println!("Received GetUserRequest:{:?}", req);
         let res:GetUserResponse = GetUserResponse{
@@ -45,8 +54,8 @@ impl RustHexagonalService for RustHexagonalV1Service {
     }
 }
 
-
-pub fn rust_hexagonal_service_server() -> rust_hexagonal_service::rust_hexagonal_service_server::RustHexagonalServiceServer<RustHexagonalV1Service> {
-    let user: RustHexagonalV1Service = RustHexagonalV1Service::default();
-    rust_hexagonal_service::rust_hexagonal_service_server::RustHexagonalServiceServer::new(user)
+pub fn rust_hexagonal_service_server(user_uc: Arc<dyn UserUsecase>) -> RustHexagonalServiceServer<RustHexagonalGrpcServer> {
+    RustHexagonalServiceServer::new(
+        RustHexagonalGrpcServer::new(user_uc)
+    )
 }
