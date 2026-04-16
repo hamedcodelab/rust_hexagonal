@@ -6,6 +6,9 @@ use crate::user::domain::user::User;
 use crate::user::port::RepoError;
 
 
+use crate::user::usecase::{list,create,delete,get};
+
+
 
 pub struct UserU {
     pub user_repo: Arc<dyn UserRepository>
@@ -20,23 +23,16 @@ impl UserU {
 #[async_trait]
 impl UserUsecase for UserU {
     async fn list(&self) -> Result<Vec<User>, RepoError> {
-        let rows =  self.user_repo.list().await?;
-        Ok(rows)
+        list::list(self.user_repo.as_ref()).await
     }
-
-    async fn create(&self, user: &User) -> Result<Option<User>, RepoError> {
-        let res =  self.user_repo.create(user).await?;
-        Ok(res)
+    async fn create(&self, user: &mut User) -> Result<User, RepoError> {
+        create::create(self.user_repo.as_ref(),user).await
     }
-
-    async fn get_by_id(&self, id: u64) -> Result<Option<User>, RepoError> {
-        let row =  self.user_repo.get_by_id(id).await?;
-        Ok(row)
+    async fn get_by_id(&self, id: i64) -> Result<Option<User>, RepoError> {
+        get::get_by_id(self.user_repo.as_ref(),id).await
     }
-
-    async fn delete_by_id(&self, id: u64) -> Result<(), RepoError> {
-        Ok(())
+    async fn delete_by_id(&self, id: i64) -> Result<(), RepoError> {
+        delete::delete_by_id(self.user_repo.as_ref(),id).await
     }
 
 }
-

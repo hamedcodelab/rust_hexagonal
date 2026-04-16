@@ -13,3 +13,11 @@ message GetUserResponse {
 message CreateUserResponse {
   User user = 1;
 }
+
+message ListUserResponse {
+  repeated User user = 1;
+}
+
+message DeleteUserResponse {
+  bool result = 1;
+}
